@@ -147,7 +147,7 @@ extension FriendsViewController: UITableViewDelegate, UITableViewDataSource {
            let dst = segue.destination as? PhotoController,
            let user = sender as? User {
             animatedChoose()
-            //
+            
             // func getUserPhotos(){
             let network = NetworkService()
             let userID = user.id
