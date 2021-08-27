@@ -14,19 +14,42 @@ class GroupController: UITableViewController, UISearchBarDelegate {
     var allGroups = [Group]()
     var searchAllGroups = [Group]()
     var searchFlag = false
+
     lazy var realm = try! Realm()
+    var databaseNotificationToken: NotificationToken?
+    var resultNotificationToken: NotificationToken?
 
     let reuseIdentifierUniversalTableCell =  "reuseIdentifierUniversalTableCell"
 
 
     //MARK:- setupGroup
 
-        func setupGroup(){
-                let network = NetworkService()
-                network.groupsRequest { _ in}
-                let groups = realm.objects(Group.self)
-                self.allGroups = Array(groups)
+    func setupGroup(){
+        let network = NetworkService()
+        network.groupsRequest { _ in}
+
+        databaseNotificationToken = realm.observe { notification, realm in
+            print(notification.rawValue)
+            print(realm.objects(Group.self))
         }
+
+        let groups = realm.objects(Group.self)
+        self.allGroups = Array(groups)
+
+        resultNotificationToken = groups.observe { change in
+            switch change{
+            case .initial:
+                print("init")
+            case .update(_, let deletions, let insertions, let modifications):
+                print(deletions)
+                print(insertions)
+                print(modifications)
+            case .error(let error):
+                print(error)
+            }
+        }
+
+    }
 
 
     //MARK:- viewDidLoad
