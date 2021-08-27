@@ -136,7 +136,7 @@ class LoginViewController: UIViewController {
         //-MARK: Session
         
         let session = Session.instance
-        session.userId = 228
+        session.userId = "228"
         session.token = "anton_hodyna"
         
         // Do any additional setup after loading the view.

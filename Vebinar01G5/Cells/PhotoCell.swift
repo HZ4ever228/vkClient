@@ -14,7 +14,9 @@ class PhotoCell: UICollectionViewCell {
     
     @IBOutlet weak var likeCountLabel: UILabel!
     @IBOutlet weak var likeButton: UIButton!
-    
+
+    var savedObject: Any?
+
     func setup() {}
     
     func clearCell(){
@@ -26,9 +28,10 @@ class PhotoCell: UICollectionViewCell {
         clearCell()
     }
     
-    func configure(image: UIImage) {
-        //придумать как форматировать картинки под один размер
-        photoImageView.image = image
+    func configure(userPhoto: UserPhoto) {
+        savedObject = userPhoto
+        guard let url = URL(string: userPhoto.photo_604) else {return}
+        photoImageView.kf.setImage(with: url)
         
         likeButton.setImage(UIImage(named: "heart"), for: .normal)
         likeCountLabel.text = "0"
