@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class UniversalTableCell: UITableViewCell {
 
@@ -49,13 +50,15 @@ class UniversalTableCell: UITableViewCell {
     
     func configure(user: User) {
         savedObject = user
-        titleLabel.text = user.name
-        avatarImageView.image = user.avatar
+        titleLabel.text = user.first_name + " " + user.last_name
+        guard let url = URL(string: user.photo_200_orig) else {return}
+        avatarImageView.kf.setImage(with: url)
     }
     
     func configure(group: Group) {
         savedObject = group
-        titleLabel.text = group.title
-        avatarImageView.image = group.avatar
+        titleLabel.text = group.name
+        guard let url = URL(string: group.photo_200) else {return}
+        avatarImageView.kf.setImage(with: url)
     }
 }
