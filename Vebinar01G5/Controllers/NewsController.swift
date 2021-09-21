@@ -6,11 +6,15 @@
 //
 
 import UIKit
+import RealmSwift
+import SwiftyJSON
 
 class NewsController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+       // newsRequest()
     }
 
+   
 }

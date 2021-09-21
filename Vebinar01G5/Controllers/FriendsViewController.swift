@@ -37,7 +37,8 @@ class FriendsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.tableView.register(UINib(nibName: "UniversalTableCell", bundle: nil), forCellReuseIdentifier: reuseIdentifierUniversalTableCell)
+        self.tableView.register(UINib(nibName: "UniversalTableCell", bundle: nil),
+                                forCellReuseIdentifier: reuseIdentifierUniversalTableCell)
         tableView.delegate = self
         tableView.dataSource = self
         searchBar.delegate = self
