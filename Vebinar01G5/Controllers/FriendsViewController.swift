@@ -151,7 +151,8 @@ extension FriendsViewController: UITableViewDelegate, UITableViewDataSource {
         return arrayByLetter(letter: arrayLetters()[section]).count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifierUniversalTableCell, for: indexPath) as? UniversalTableCell else { return UITableViewCell() }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifierUniversalTableCell,
+                                                       for: indexPath) as? UniversalTableCell else { return UITableViewCell() }
         let arrayByLetterItems = arrayByLetter(letter: arrayLetters()[indexPath.section])
         cell.configure(user: arrayByLetterItems[indexPath.row])
         return cell
