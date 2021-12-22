@@ -24,7 +24,6 @@ class UniversalTableCell: UITableViewCell {
         backView.layer.shadowOffset = CGSize(width: 5, height: 5)
         backView.layer.shadowRadius = 5
         backView.layer.shadowOpacity = 0.5
-        
     }
     
     func clearCell() {

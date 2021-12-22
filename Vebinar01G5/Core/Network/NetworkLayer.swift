@@ -108,7 +108,5 @@ class NetworkService {
             }
         }
         dataTask.resume()
-
     }
-
 }

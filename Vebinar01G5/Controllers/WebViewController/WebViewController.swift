@@ -21,7 +21,7 @@ class TableViewController: UIViewController {
         //friendPhotoRequest(searchText:22090669)
         //groupsRequest()
         //groupsSearch(searchText: 41139501)
-
+        newsRequest()
 
     }
 
@@ -55,7 +55,7 @@ class VKLoginController: UIViewController {
         ]
 
         let request = URLRequest(url: components.url!)
-        
+
         webView.load(request)
 
     }
@@ -133,6 +133,27 @@ func groupsSearch(searchText: Int) {
             do {
                 let json = try JSONSerialization.jsonObject(with: data)
                 print(json)
+            } catch {
+                print(error)
+            }
+        }
+    }
+    dataTask.resume()
+
+}
+
+func newsRequest() {
+
+    guard let url = URL(string: "https://api.vk.com/method/newsfeed.getLists?extended=1&v=5.52&access_token=\(Session.instance.token)") else { return }
+
+    let request = URLRequest(url: url)
+
+    let dataTask = URLSession.shared.dataTask(with: request) { data, response, error in
+
+        if let data = data {
+            do {
+                let json = try JSONSerialization.jsonObject(with: data)
+                print("newsRequst \(json)")
             } catch {
                 print(error)
             }

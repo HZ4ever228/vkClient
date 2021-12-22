@@ -23,7 +23,10 @@ class FriendsViewController: UIViewController {
 
     var searchFriendsArray = [User]()
     var searchFlag = false
-    
+
+    var databaseNotificationToken: NotificationToken?
+    var resultNotificationToken: NotificationToken?
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tableView.reloadData()
@@ -34,7 +37,8 @@ class FriendsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.tableView.register(UINib(nibName: "UniversalTableCell", bundle: nil), forCellReuseIdentifier: reuseIdentifierUniversalTableCell)
+        self.tableView.register(UINib(nibName: "UniversalTableCell", bundle: nil),
+                                forCellReuseIdentifier: reuseIdentifierUniversalTableCell)
         tableView.delegate = self
         tableView.dataSource = self
         searchBar.delegate = self
@@ -49,10 +53,27 @@ class FriendsViewController: UIViewController {
     //MARK:- setupUser
     
     func setupUser(){
-            let network = NetworkService()
-            network.friendsRequst { _ in}
-            let users = realm.objects(User.self)
-            self.friendsArray = Array(users)
+        let network = NetworkService()
+        network.friendsRequst { _ in}
+        databaseNotificationToken = realm.observe { notification, realm in
+            print(notification.rawValue)
+            print(realm.objects(User.self))
+        }
+        let users = realm.objects(User.self)
+        self.friendsArray = Array(users)
+
+        resultNotificationToken = users.observe { change in
+            switch change{
+            case .initial:
+                print("init")
+            case .update(_, let deletions, let insertions, let modifications):
+                print(deletions)
+                print(insertions)
+                print(modifications)
+            case .error(let error):
+                print(error)
+            }
+        }
     }
 
 
@@ -130,7 +151,8 @@ extension FriendsViewController: UITableViewDelegate, UITableViewDataSource {
         return arrayByLetter(letter: arrayLetters()[section]).count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifierUniversalTableCell, for: indexPath) as? UniversalTableCell else { return UITableViewCell() }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifierUniversalTableCell,
+                                                       for: indexPath) as? UniversalTableCell else { return UITableViewCell() }
         let arrayByLetterItems = arrayByLetter(letter: arrayLetters()[indexPath.section])
         cell.configure(user: arrayByLetterItems[indexPath.row])
         return cell
@@ -140,22 +162,44 @@ extension FriendsViewController: UITableViewDelegate, UITableViewDataSource {
         return 60
     }
 
-    //MARK:- prepare
+    //MARK:- prepare cell in photoController
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == segueToPhotoController,
            let dst = segue.destination as? PhotoController,
            let user = sender as? User {
             animatedChoose()
-            
+
             // func getUserPhotos(){
             let network = NetworkService()
             let userID = user.id
             network.friendsPhotoRequst(userID: userID) { _ in}
+
+            databaseNotificationToken = realm.observe { notification, realm in
+                print(notification.rawValue)
+                print(realm.objects(UserPhoto.self))
+            }
+
             let userPhoto = realm.objects(UserPhoto.self)
             dst.photoArray = Array(userPhoto.filter { $0.owner_id == userID})
+
+            resultNotificationToken = userPhoto.observe { change in
+                switch change{
+                case .initial:
+                    print("init")
+                case .update(_, let deletions, let insertions, let modifications):
+                    print(deletions)
+                    print(insertions)
+                    print(modifications)
+                case .error(let error):
+                    print(error)
+                }
             }
+
         }
+
+
+    }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
         guard let cell = tableView.cellForRow(at: indexPath) as? UniversalTableCell,
