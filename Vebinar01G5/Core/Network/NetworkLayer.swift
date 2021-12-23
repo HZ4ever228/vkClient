@@ -24,7 +24,7 @@ class NetworkService {
     //MARK: -friendsRequest
 
     func friendsRequst(completion: @escaping (Result<[User], Error>) -> Void) {
-        guard let url = URL(string: "https://api.vk.com/method/friends.get?fields=photo_200_orig,bdate&v=5.52&access_token=\(Session.instance.token)") else { return }
+        guard let url = URL(string: "https://api.vk.com/method/friends.get?fields=photo_200_orig,bdate&v=5.81&access_token=\(Session.instance.token)") else { return }
 
         let request = URLRequest(url: url)
 
@@ -59,7 +59,7 @@ class NetworkService {
 
     func groupsRequest(completion: @escaping (Result<[Group], Error>) -> Void) {
 
-        guard let url = URL(string: "https://api.vk.com/method/groups.get?extended=1&v=5.52&access_token=\(Session.instance.token)") else { return }
+        guard let url = URL(string: "https://api.vk.com/method/groups.get?extended=1&v=5.81&access_token=\(Session.instance.token)") else { return }
 
         let request = URLRequest(url: url)
 
@@ -93,7 +93,7 @@ class NetworkService {
     //MARK:- friendsPhotoRequst
     func friendsPhotoRequst(userID: Int?, completion: @escaping (Result<[UserPhoto], Error>) -> Void) {
 
-        guard let url = URL(string: "https://api.vk.com/method/photos.get?owner_id=\(userID ?? 0)&album_id=profile&v=5.52&access_token=\(Session.instance.token)") else { return }
+        guard let url = URL(string: "https://api.vk.com/method/photos.get?owner_id=\(userID ?? 0)&album_id=profile&v=5.81&access_token=\(Session.instance.token)") else { return }
 
         let request = URLRequest(url: url)
 
