@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class NewsFeedFotosTableViewCell: UITableViewCell {
 
@@ -59,7 +60,7 @@ class NewsFeedFotosTableViewCell: UITableViewCell {
         }
     }
     
-    public var imageArray: [UIImage?] = []
+    public var imageArray: [String?] = []
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -77,75 +78,75 @@ class NewsFeedFotosTableViewCell: UITableViewCell {
         case 0:
             debugPrint("image array is empty")
         case 1:
-            if let firstImage = imageArray[0] {
+            if let firstImage = URL(string: imageArray[0] ?? "") {
                 firstNewsImageView.isHidden = false
-                firstNewsImageView.image = firstImage
+                firstNewsImageView.kf.setImage(with: firstImage)
             }
         case 2:
-            if let firstImage = imageArray[0], let secondImage = imageArray[1] {
+            if let firstImage = URL(string: imageArray[0] ?? ""), let secondImage = URL(string: imageArray[1] ?? "") {
                 twoThreeFourStackView.isHidden = false
                 firstNewsImageView.isHidden = false
-                firstNewsImageView.image = firstImage
+                firstNewsImageView.kf.setImage(with: firstImage)
                 secondNewsImageView.isHidden = false
-                secondNewsImageView.image = secondImage
+                secondNewsImageView.kf.setImage(with: secondImage)
             }
         case 3:
-            if let firstImage = imageArray[0], let secondImage = imageArray[1], let thirdImage = imageArray[2] {
+            if let firstImage = URL(string: imageArray[0] ?? ""), let secondImage = URL(string: imageArray[1] ?? ""), let thirdImage = URL(string: imageArray[2] ?? "") {
                 twoThreeFourStackView.isHidden = false
                 threeFourStackView.isHidden = false
                 firstNewsImageView.isHidden = false
-                firstNewsImageView.image = firstImage
+                firstNewsImageView.kf.setImage(with: firstImage)
                 secondNewsImageView.isHidden = false
-                secondNewsImageView.image = secondImage
+                secondNewsImageView.kf.setImage(with: secondImage)
                 thirdNewsImageView.isHidden = false
-                thirdNewsImageView.image = thirdImage
+                firstNewsImageView.kf.setImage(with: firstImage)
             }
         case 4:
-            if let firstImage = imageArray[0], let secondImage = imageArray[1], let thirdImage = imageArray[2], let fourthImage = imageArray[3] {
+            if let firstImage = URL(string: imageArray[0] ?? ""), let secondImage = URL(string: imageArray[1] ?? ""), let thirdImage = URL(string: imageArray[2] ?? ""), let fourthImage = URL(string: imageArray[3] ?? "") {
                 twoThreeFourStackView.isHidden = false
                 threeFourStackView.isHidden = false
                 firstNewsImageView.isHidden = false
-                firstNewsImageView.image = firstImage
+                firstNewsImageView.kf.setImage(with: firstImage)
                 secondNewsImageView.isHidden = false
-                secondNewsImageView.image = secondImage
+                secondNewsImageView.kf.setImage(with: secondImage)
                 thirdNewsImageView.isHidden = false
-                thirdNewsImageView.image = thirdImage
+                firstNewsImageView.kf.setImage(with: firstImage)
                 fourthNewsImageView.isHidden = false
-                fourthNewsImageView.image = fourthImage
+                fourthNewsImageView.kf.setImage(with: fourthImage)
             }
         case 5:
-            if let firstImage = imageArray[0], let secondImage = imageArray[1], let thirdImage = imageArray[2], let fourthImage = imageArray[3], let fifthImage = imageArray[4]{
+            if let firstImage = URL(string: imageArray[0] ?? ""), let secondImage = URL(string: imageArray[1] ?? ""), let thirdImage = URL(string: imageArray[2] ?? ""), let fourthImage = URL(string: imageArray[3] ?? ""), let fifthImage = URL(string: imageArray[4] ?? ""){
                 twoThreeFourStackView.isHidden = false
                 threeFourStackView.isHidden = false
                 fiveSixStackView.isHidden = false
                 firstNewsImageView.isHidden = false
-                firstNewsImageView.image = firstImage
+                firstNewsImageView.kf.setImage(with: firstImage)
                 secondNewsImageView.isHidden = false
-                secondNewsImageView.image = secondImage
+                secondNewsImageView.kf.setImage(with: secondImage)
                 thirdNewsImageView.isHidden = false
-                thirdNewsImageView.image = thirdImage
+                firstNewsImageView.kf.setImage(with: firstImage)
                 fourthNewsImageView.isHidden = false
-                fourthNewsImageView.image = fourthImage
+                fourthNewsImageView.kf.setImage(with: fourthImage)
                 fifthNewsImageView.isHidden = false
-                fifthNewsImageView.image = fifthImage
+                fifthNewsImageView.kf.setImage(with: fifthImage)
             }
         case 6...:
-            if let firstImage = imageArray[0], let secondImage = imageArray[1], let thirdImage = imageArray[2], let fourthImage = imageArray[3], let fifthImage = imageArray[4], let sixthImage = imageArray[5] {
+            if let firstImage = URL(string: imageArray[0] ?? ""), let secondImage = URL(string: imageArray[1] ?? ""), let thirdImage = URL(string: imageArray[2] ?? ""), let fourthImage = URL(string: imageArray[3] ?? ""), let fifthImage = URL(string: imageArray[4] ?? ""), let sixthImage = URL(string: imageArray[5] ?? "") {
                 twoThreeFourStackView.isHidden = false
                 threeFourStackView.isHidden = false
                 fiveSixStackView.isHidden = false
                 firstNewsImageView.isHidden = false
-                firstNewsImageView.image = firstImage
+                firstNewsImageView.kf.setImage(with: firstImage)
                 secondNewsImageView.isHidden = false
-                secondNewsImageView.image = secondImage
+                secondNewsImageView.kf.setImage(with: secondImage)
                 thirdNewsImageView.isHidden = false
-                thirdNewsImageView.image = thirdImage
+                thirdNewsImageView.kf.setImage(with: thirdImage)
                 fourthNewsImageView.isHidden = false
-                fourthNewsImageView.image = fourthImage
+                fourthNewsImageView.kf.setImage(with: fourthImage)
                 fifthNewsImageView.isHidden = false
-                fifthNewsImageView.image = fifthImage
+                fifthNewsImageView.kf.setImage(with: fifthImage)
                 sixthNewsImageView.isHidden = false
-                sixthNewsImageView.image = sixthImage
+                sixthNewsImageView.kf.setImage(with: sixthImage)
             }
             
         default:

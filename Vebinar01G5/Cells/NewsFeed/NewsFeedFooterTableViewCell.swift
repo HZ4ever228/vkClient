@@ -38,10 +38,25 @@ class NewsFeedFooterTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
     }
+    
+    func configure(likesCount: Int32?, repostsCount: Int32?, commentsCount: Int32?, viewsCount: Int32?, isLiked: Int16?) {
+        likeCountLabel.text = "\(likesCount ?? 0)"
+        repostCountLabel.text = "\(repostsCount ?? 0)"
+        commentCountLabel.text = "\(commentsCount ?? 0)"
+        viewsCountLabel.text = "\(viewsCount ?? 0)"
+    }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(false, animated: animated)
 
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        likeCountLabel.text = ""
+        repostCountLabel.text = ""
+        commentCountLabel.text = ""
+        viewsCountLabel.text = ""
     }
     
     @objc func likeButtonTap(_: UITapGestureRecognizer) {

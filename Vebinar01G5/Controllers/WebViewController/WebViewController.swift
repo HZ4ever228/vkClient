@@ -13,8 +13,6 @@ class TableViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        newsRequest()
-
     }
 
 }
@@ -37,11 +35,11 @@ class VKLoginController: UIViewController {
         components.path = "/authorize"
         components.queryItems = [
             URLQueryItem(name: "client_id", value: "7922523"), // индивидуальные айди приложения
-            URLQueryItem(name: "scope", value: "262150"), // Доступы друзья фото и тд
+            URLQueryItem(name: "scope", value: "270342"), // Доступы друзья фото и тд
             URLQueryItem(name: "display", value: "mobile"), // Стиль отображения
             URLQueryItem(name: "redirect_uri", value: "https://oauth.vk.com/blank.html"), //
             URLQueryItem(name: "response_type", value: "token"),
-            URLQueryItem(name: "v", value: "5.81")
+            URLQueryItem(name: "v", value: "5.131")
         ]
 
         let request = URLRequest(url: components.url!)
@@ -87,23 +85,3 @@ extension VKLoginController: WKNavigationDelegate {
     
 }
 
-func newsRequest() {
-
-    guard let url = URL(string: "https://api.vk.com/method/newsfeed.getLists?extended=1&v=5.81&access_token=\(Session.instance.token)") else { return }
-
-    let request = URLRequest(url: url)
-
-    let dataTask = URLSession.shared.dataTask(with: request) { data, response, error in
-
-        if let data = data {
-            do {
-                let json = try JSONSerialization.jsonObject(with: data)
-                print("newsRequst \(json)")
-            } catch {
-                print(error)
-            }
-        }
-    }
-    dataTask.resume()
-
-}
