@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="0.0" id="KGk-i7-Jjw" customClass="NewsFeedFotosTableViewCell" customModule="Vebinar01G5" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="326" height="316"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="326" height="316"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="aaa-4O-O0y">
+                        <rect key="frame" x="20" y="11" width="286" height="294"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="THR-aU-J1f">
+                                <rect key="frame" x="0.0" y="0.0" width="141" height="294"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gRw-Ci-EQT">
+                                        <rect key="frame" x="0.0" y="0.0" width="141" height="145"/>
+                                    </imageView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="3L6-9m-uKB">
+                                        <rect key="frame" x="0.0" y="149" width="141" height="145"/>
+                                        <subviews>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="voy-XK-aqc">
+                                                <rect key="frame" x="0.0" y="0.0" width="68.5" height="145"/>
+                                            </imageView>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="A12-Kw-dQf">
+                                                <rect key="frame" x="72.5" y="0.0" width="68.5" height="145"/>
+                                            </imageView>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                            </stackView>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="ZF9-Dv-EJl">
+                                <rect key="frame" x="145" y="0.0" width="141" height="294"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="xKk-ig-8oU">
+                                        <rect key="frame" x="0.0" y="0.0" width="141" height="145"/>
+                                    </imageView>
+                                    <stackView opaque="NO" contentMode="scaleAspectFill" distribution="fillEqually" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="LKg-oF-LRz">
+                                        <rect key="frame" x="0.0" y="149" width="141" height="145"/>
+                                        <subviews>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Sla-PB-4rS">
+                                                <rect key="frame" x="0.0" y="0.0" width="68.5" height="145"/>
+                                            </imageView>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="LMC-2y-G7E">
+                                                <rect key="frame" x="72.5" y="0.0" width="68.5" height="145"/>
+                                            </imageView>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="294" id="FOq-mn-8Uj"/>
+                        </constraints>
+                    </stackView>
+                </subviews>
+                <color key="backgroundColor" red="0.094117648900000003" green="0.098039209840000002" blue="0.1058823466" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                <constraints>
+                    <constraint firstAttribute="bottomMargin" secondItem="aaa-4O-O0y" secondAttribute="bottom" id="8B7-Tx-h23"/>
+                    <constraint firstItem="aaa-4O-O0y" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" id="T8h-VZ-hlG"/>
+                    <constraint firstItem="aaa-4O-O0y" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" id="Uph-46-yWL"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="aaa-4O-O0y" secondAttribute="trailing" id="XOq-au-YYF"/>
+                </constraints>
+            </tableViewCellContentView>
+            <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <connections>
+                <outlet property="fifthNewsImageView" destination="voy-XK-aqc" id="nLR-tB-F9g"/>
+                <outlet property="firstNewsImageView" destination="gRw-Ci-EQT" id="vZq-IR-nxG"/>
+                <outlet property="fiveSixStackView" destination="3L6-9m-uKB" id="C3G-3L-yI1"/>
+                <outlet property="fourthNewsImageView" destination="LMC-2y-G7E" id="MID-Zh-MMF"/>
+                <outlet property="mainStackView" destination="aaa-4O-O0y" id="Cq6-0X-nus"/>
+                <outlet property="oneFiveSixStackView" destination="THR-aU-J1f" id="Q1E-8s-kXK"/>
+                <outlet property="secondNewsImageView" destination="xKk-ig-8oU" id="GQN-ff-7Ig"/>
+                <outlet property="sixthNewsImageView" destination="A12-Kw-dQf" id="h3G-Qu-aXH"/>
+                <outlet property="thirdNewsImageView" destination="Sla-PB-4rS" id="9rR-f3-fwf"/>
+                <outlet property="threeFourStackView" destination="LKg-oF-LRz" id="CsM-yB-9YJ"/>
+                <outlet property="twoThreeFourStackView" destination="ZF9-Dv-EJl" id="0Vo-3A-Afe"/>
+            </connections>
+            <point key="canvasLocation" x="136.23188405797103" y="170.75892857142856"/>
+        </tableViewCell>
+    </objects>
+</document>
