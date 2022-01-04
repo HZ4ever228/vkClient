@@ -7,6 +7,7 @@
 
 import UIKit
 import WebKit
+import CoreData
 
 //MARK:- TableViewController
 class TableViewController: UIViewController {
@@ -45,6 +46,10 @@ class VKLoginController: UIViewController {
         let request = URLRequest(url: components.url!)
 
         webView.load(request)
+        
+        let application =  UIApplication.shared.delegate as! AppDelegate
+                let context = application.persistentContainer.viewContext
+
 
     }
 

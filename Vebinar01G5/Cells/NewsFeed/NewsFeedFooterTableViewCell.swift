@@ -39,7 +39,7 @@ class NewsFeedFooterTableViewCell: UITableViewCell {
         super.awakeFromNib()
     }
     
-    func configure(likesCount: Int32?, repostsCount: Int32?, commentsCount: Int32?, viewsCount: Int32?, isLiked: Int16?) {
+    func configure(likesCount: Int32?, repostsCount: Int32?, commentsCount: Int32?, viewsCount: Int32?, isLiked: Bool?) {
         likeCountLabel.text = "\(likesCount ?? 0)"
         repostCountLabel.text = "\(repostsCount ?? 0)"
         commentCountLabel.text = "\(commentsCount ?? 0)"

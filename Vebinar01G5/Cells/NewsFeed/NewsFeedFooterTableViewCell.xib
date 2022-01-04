@@ -8,7 +8,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
-        <array key="VKSansDisplayMedium.otf">
+        <array key="VK Sans Display Medium.otf">
             <string>VKSansDisplay-Medium</string>
         </array>
     </customFonts>
@@ -68,7 +68,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" red="0.13725490870000001" green="0.13725490870000001" blue="0.14509806040000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <color key="backgroundColor" red="0.13333333333333333" green="0.13725490196078433" blue="0.14509803921568626" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <constraints>
                             <constraint firstItem="DNY-yr-AAK" firstAttribute="leading" secondItem="1Bm-mw-re2" secondAttribute="trailing" constant="8" id="24D-At-bHa"/>
                             <constraint firstAttribute="trailing" secondItem="DNY-yr-AAK" secondAttribute="trailing" constant="12" id="5jD-2e-kow"/>

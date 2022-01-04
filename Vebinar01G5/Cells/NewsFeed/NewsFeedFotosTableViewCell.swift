@@ -9,7 +9,8 @@ import UIKit
 import Kingfisher
 
 class NewsFeedFotosTableViewCell: UITableViewCell {
-
+    
+//    public var complitionSucces = {}
     static let reuseIdentifier = "reuseIdentifierNewsFeedFotosTableViewCell"
     
     @IBOutlet weak var mainStackView: UIStackView!
@@ -60,98 +61,82 @@ class NewsFeedFotosTableViewCell: UITableViewCell {
         }
     }
     
-    public var imageArray: [String?] = []
-    
     override func awakeFromNib() {
         super.awakeFromNib()
         clearCell()
-        configureFotosTableView(newsImageCount: imageArray.count)
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
     }
     
-    func configureFotosTableView(newsImageCount: Int) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+        
+    }
+    
+    func configure(imageArray: [String]) {
         switch imageArray.count {
         case 0:
             debugPrint("image array is empty")
         case 1:
-            if let firstImage = URL(string: imageArray[0] ?? "") {
-                firstNewsImageView.isHidden = false
-                firstNewsImageView.kf.setImage(with: firstImage)
-            }
+            configureImageView(imageView: firstNewsImageView, image: imageArray[0])
         case 2:
-            if let firstImage = URL(string: imageArray[0] ?? ""), let secondImage = URL(string: imageArray[1] ?? "") {
-                twoThreeFourStackView.isHidden = false
-                firstNewsImageView.isHidden = false
-                firstNewsImageView.kf.setImage(with: firstImage)
-                secondNewsImageView.isHidden = false
-                secondNewsImageView.kf.setImage(with: secondImage)
-            }
+            configureStacks(photosCount: 2)
+            configureImageView(imageView: firstNewsImageView, image: imageArray[0])
+            configureImageView(imageView: secondNewsImageView, image: imageArray[1])
         case 3:
-            if let firstImage = URL(string: imageArray[0] ?? ""), let secondImage = URL(string: imageArray[1] ?? ""), let thirdImage = URL(string: imageArray[2] ?? "") {
-                twoThreeFourStackView.isHidden = false
-                threeFourStackView.isHidden = false
-                firstNewsImageView.isHidden = false
-                firstNewsImageView.kf.setImage(with: firstImage)
-                secondNewsImageView.isHidden = false
-                secondNewsImageView.kf.setImage(with: secondImage)
-                thirdNewsImageView.isHidden = false
-                firstNewsImageView.kf.setImage(with: firstImage)
-            }
+            configureStacks(photosCount: 3)
+            configureImageView(imageView: firstNewsImageView, image: imageArray[0])
+            configureImageView(imageView: secondNewsImageView, image: imageArray[1])
+            configureImageView(imageView: thirdNewsImageView, image: imageArray[2])
         case 4:
-            if let firstImage = URL(string: imageArray[0] ?? ""), let secondImage = URL(string: imageArray[1] ?? ""), let thirdImage = URL(string: imageArray[2] ?? ""), let fourthImage = URL(string: imageArray[3] ?? "") {
-                twoThreeFourStackView.isHidden = false
-                threeFourStackView.isHidden = false
-                firstNewsImageView.isHidden = false
-                firstNewsImageView.kf.setImage(with: firstImage)
-                secondNewsImageView.isHidden = false
-                secondNewsImageView.kf.setImage(with: secondImage)
-                thirdNewsImageView.isHidden = false
-                firstNewsImageView.kf.setImage(with: firstImage)
-                fourthNewsImageView.isHidden = false
-                fourthNewsImageView.kf.setImage(with: fourthImage)
-            }
+            configureStacks(photosCount: 4)
+            configureImageView(imageView: firstNewsImageView, image: imageArray[0])
+            configureImageView(imageView: secondNewsImageView, image: imageArray[1])
+            configureImageView(imageView: thirdNewsImageView, image: imageArray[2])
+            configureImageView(imageView: fourthNewsImageView, image: imageArray[3])
         case 5:
-            if let firstImage = URL(string: imageArray[0] ?? ""), let secondImage = URL(string: imageArray[1] ?? ""), let thirdImage = URL(string: imageArray[2] ?? ""), let fourthImage = URL(string: imageArray[3] ?? ""), let fifthImage = URL(string: imageArray[4] ?? ""){
-                twoThreeFourStackView.isHidden = false
-                threeFourStackView.isHidden = false
-                fiveSixStackView.isHidden = false
-                firstNewsImageView.isHidden = false
-                firstNewsImageView.kf.setImage(with: firstImage)
-                secondNewsImageView.isHidden = false
-                secondNewsImageView.kf.setImage(with: secondImage)
-                thirdNewsImageView.isHidden = false
-                firstNewsImageView.kf.setImage(with: firstImage)
-                fourthNewsImageView.isHidden = false
-                fourthNewsImageView.kf.setImage(with: fourthImage)
-                fifthNewsImageView.isHidden = false
-                fifthNewsImageView.kf.setImage(with: fifthImage)
-            }
+            configureStacks(photosCount: 5)
+            configureImageView(imageView: firstNewsImageView, image: imageArray[0])
+            configureImageView(imageView: secondNewsImageView, image: imageArray[1])
+            configureImageView(imageView: thirdNewsImageView, image: imageArray[2])
+            configureImageView(imageView: fourthNewsImageView, image: imageArray[3])
+            configureImageView(imageView: fifthNewsImageView, image: imageArray[4])
         case 6...:
-            if let firstImage = URL(string: imageArray[0] ?? ""), let secondImage = URL(string: imageArray[1] ?? ""), let thirdImage = URL(string: imageArray[2] ?? ""), let fourthImage = URL(string: imageArray[3] ?? ""), let fifthImage = URL(string: imageArray[4] ?? ""), let sixthImage = URL(string: imageArray[5] ?? "") {
-                twoThreeFourStackView.isHidden = false
-                threeFourStackView.isHidden = false
-                fiveSixStackView.isHidden = false
-                firstNewsImageView.isHidden = false
-                firstNewsImageView.kf.setImage(with: firstImage)
-                secondNewsImageView.isHidden = false
-                secondNewsImageView.kf.setImage(with: secondImage)
-                thirdNewsImageView.isHidden = false
-                thirdNewsImageView.kf.setImage(with: thirdImage)
-                fourthNewsImageView.isHidden = false
-                fourthNewsImageView.kf.setImage(with: fourthImage)
-                fifthNewsImageView.isHidden = false
-                fifthNewsImageView.kf.setImage(with: fifthImage)
-                sixthNewsImageView.isHidden = false
-                sixthNewsImageView.kf.setImage(with: sixthImage)
-            }
+            configureStacks(photosCount: 6)
+            configureImageView(imageView: firstNewsImageView, image: imageArray[0])
+            configureImageView(imageView: secondNewsImageView, image: imageArray[1])
+            configureImageView(imageView: thirdNewsImageView, image: imageArray[2])
+            configureImageView(imageView: fourthNewsImageView, image: imageArray[3])
+            configureImageView(imageView: firstNewsImageView, image: imageArray[4])
+            configureImageView(imageView: sixthNewsImageView, image: imageArray[5])
             
         default:
             debugPrint("image array is empty")
         }
+    }
+    
+    func configureStacks(photosCount: Int){
+        switch photosCount {
+        case 2:
+            twoThreeFourStackView.isHidden = false
+        case 3:
+            twoThreeFourStackView.isHidden = false
+            threeFourStackView.isHidden = false
+        case 4:
+            twoThreeFourStackView.isHidden = false
+            threeFourStackView.isHidden = false
+            firstNewsImageView.isHidden = false
+        case 5...:
+            twoThreeFourStackView.isHidden = false
+            threeFourStackView.isHidden = false
+            fiveSixStackView.isHidden = false
+            firstNewsImageView.isHidden = false
+        default:
+            debugPrint("image array is empty or only one photo")
+        }
+    }
+    
+    func configureImageView(imageView: UIImageView, image: String) {
+        imageView.isHidden = false
+        imageView.kf.setImage(with: URL(string: image))
     }
     
     func clearCell(){

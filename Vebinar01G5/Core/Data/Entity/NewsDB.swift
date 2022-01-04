@@ -2,134 +2,74 @@
 //  NewsDB.swift
 //  Vebinar01G5
 //
-//  Created by Anton Hodyna on 29/12/2021.
+//  Created by Anton Hodyna on 03/01/2022.
 //
 
 import Foundation
-import CoreData
+import RealmSwift
 
-class NewsDB: NSManagedObject {
+class NewsDB: Object {
+    @objc dynamic var post_id: Int64 = 0
+    @objc dynamic var source_id: Int64 = 0
+    @objc dynamic var author = ""
+    @objc dynamic var authorImage = ""
+    @objc dynamic var date: Int64 = 0
+    @objc dynamic var text = ""
+    @objc dynamic var commentsCount: Int32 = 0
+    @objc dynamic var likesCount: Int32 = 0
+    @objc dynamic var repostsCount: Int32 = 0
+    @objc dynamic var viewsCount: Int32 = 0
+    @objc dynamic var isLiked = false
+    var newsPhotos = List<String>()
     
-    static func fetch(newsId: Int64, in context: NSManagedObjectContext) -> NewsDB? {
-        let request: NSFetchRequest<NewsDB> = NewsDB.fetchRequest()
-        request.predicate = NSPredicate(format: "postId = %@", NSNumber(value: newsId))
-        request.fetchBatchSize = 1
-        let result = try? context.fetch(request)
-        if let newsDB = result?[0] {
-            return newsDB
-        } else { return nil }
-    }
-    
-    static func insertOrUpdate(matching newsData: NewsFeedResponse, in context: NSManagedObjectContext) throws {
-        
-        let request: NSFetchRequest<NewsDB> = NewsDB.fetchRequest()
-        if let items = newsData.items {
+    func insertOrUpdate(response: NewsFeedResponse) {
+        if let items = response.items, let groups = response.groups, let profiles = response.profiles {
+            let itemGroup = DispatchGroup()
+            
             for item in items {
-                guard let uid = item.post_id else { return }
-                
-                //            let formatterFrom = DateFormatter()
-                //            formatterFrom.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                
-                request.predicate = NSPredicate(format: "postId = %@", NSNumber(value: uid))
-                do {
-                    let matches = try context.fetch(request)
-                    if matches.count > 0 {
-                        
-                        matches[0].postId = item.post_id ?? 0
-                        matches[0].type = item.type ?? ""
-                        matches[0].sourceId = item.source_id ?? 0
-                        if (item.source_id ?? 0) > 0 {
-                            matches[0].postFromUser = true
-                        } else {
-                            matches[0].postFromUser = false
-                        }
-                        
-                        switch matches[0].postFromUser {
-                        case true:
-                            if let userID = item.source_id, let user = newsData.profiles?.first(where: {$0.id ?? 0 == userID}) {
-                                matches[0].postCreatorName = (user.first_name ?? "") + (user.last_name ?? "")
-                                matches[0].postCreatorPhoto = user.photo_100
-                            }
-                        case false:
-                            if let groupID = item.source_id, let group = newsData.groups?.first(where: {$0.id == groupID}) {
-                                matches[0].postCreatorName = group.name
-                                matches[0].postCreatorPhoto = group.photo_100
-                            }
-                        }
-                        matches[0].date = item.date ?? 0
-                        matches[0].text = item.text
-                        if let attachments = item.attachments {
-                            var postPhotos = ""
-                            for attachment in attachments {
-                                if attachment.type == "photo", let photoString = attachment.photo?.sizes?.last?.url {
-                                    postPhotos += photoString
-                                    postPhotos += " , "
-                                }
-                            }
-                            matches[0].attachmentPhoto = postPhotos
-                        }
-                        matches[0].likeCount = item.likes?.count ?? 0
-                        matches[0].isLiked = item.likes?.user_likes ?? 0
-                        matches[0].repostCount = item.reposts?.count ?? 0
-                        matches[0].viewCount = item.views?.count ?? 0
-                        
-                    } else {
-                        let newsDB = NewsDB(context: context)
-                        newsDB.postId = item.post_id ?? 0
-                        newsDB.type = item.type ?? ""
-                        newsDB.sourceId = item.source_id ?? 0
-                        if (item.source_id ?? 0) > 0 {
-                            newsDB.postFromUser = true
-                        } else {
-                            newsDB.postFromUser = false
-                        }
-                        
-                        switch newsDB.postFromUser {
-                        case true:
-                            if let userID = item.source_id, let user = newsData.profiles?.first(where: {$0.id ?? 0 == userID}) {
-                                newsDB.postCreatorName = (user.first_name ?? "") + (user.last_name ?? "")
-                                newsDB.postCreatorPhoto = user.photo_100
-                            }
-                        case false:
-                            if let groupID = item.source_id, let group = newsData.groups?.first(where: {$0.id == groupID}) {
-                                newsDB.postCreatorName = group.name
-                                newsDB.postCreatorPhoto = group.photo_100
-                            }
-                        }
-                        newsDB.date = item.date ?? 0
-                        newsDB.text = item.text
-                        if let attachments = item.attachments {
-                            var postPhotos = ""
-                            for attachment in attachments {
-                                if attachment.type == "photo", let photoString = attachment.photo?.sizes?.last?.url {
-                                    postPhotos += photoString
-                                    postPhotos += " , "
-                                }
-                            }
-                            newsDB.attachmentPhoto = postPhotos
-                        }
-                        newsDB.likeCount = item.likes?.count ?? 0
-                        newsDB.isLiked = item.likes?.user_likes ?? 0
-                        newsDB.repostCount = item.reposts?.count ?? 0
-                        newsDB.viewCount = item.views?.count ?? 0
+                DispatchQueue.global().async(group: itemGroup) {
+                    let newNewsDB = NewsDB()
+                    
+                    newNewsDB.post_id = item.post_id ?? 0
+                    newNewsDB.source_id = item.source_id ?? 0
+                    if (item.source_id ?? 0) > 0, let userPofile = profiles.first(where: {$0.id ?? 0 == (item.source_id ?? 0)}) {
+                        newNewsDB.author = (userPofile.first_name ?? "") + " " + (userPofile.last_name ?? "")
+                        newNewsDB.authorImage = userPofile.photo_100 ?? ""
+                    } else if (item.source_id ?? 0) < 0, let groupProfile = groups.first(where: {$0.id == -(item.source_id ?? 0)}) {
+                        newNewsDB.author = groupProfile.name
+                        newNewsDB.authorImage = groupProfile.photo_100
                     }
-                } catch {
-                    throw error
+                    
+                    newNewsDB.date = item.date ?? 0
+                    newNewsDB.text = item.text ?? ""
+                    newNewsDB.commentsCount = item.comments?.count ?? 0
+                    newNewsDB.likesCount = item.likes?.count ?? 0
+                    newNewsDB.repostsCount = item.reposts?.count ?? 0
+                    newNewsDB.viewsCount = item.views?.count ?? 0
+                    newNewsDB.isLiked = (item.likes?.user_likes ?? 0) > 0
+                    
+                    if let atachments = item.attachments {
+                        for atachment in atachments {
+                            if let lastPhoto = atachment.photo?.sizes?.last?.url {
+                                newNewsDB.newsPhotos.append(lastPhoto)
+                            }
+                        }
+                    }
+                    do {
+                        let realm = try! Realm()
+                        try? realm.write{
+                            realm.add(newNewsDB, update: .modified)
+                        }
+                    } catch {
+                        print(error)
+                    }
                 }
             }
         }
+        
     }
     
-    static func processingResponse(dataStack: DATAStack, newsData: NewsMainResponse, completion: @escaping () -> Void) {
-        
-        dataStack.performBackgroundTask { context in
-            try? NewsDB.insertOrUpdate(matching: newsData.response, in: context)
-            try? context.save()
-            dataStack.viewContext.perform {
-                if Thread.isMainThread {
-                    completion()
-                }
-            }
-        }
+    override static func primaryKey() -> String? { //Ставим первичный ключ
+        return "post_id"
     }
 }
