@@ -50,7 +50,7 @@ class UniversalTableCell: UITableViewCell {
     func configure(user: User) {
         savedObject = user
         titleLabel.text = user.first_name + " " + user.last_name
-        guard let url = URL(string: user.photo_200_orig) else {return}
+        guard let url = URL(string: user.photo_200_orig ?? "") else {return}
         avatarImageView.kf.setImage(with: url)
     }
     

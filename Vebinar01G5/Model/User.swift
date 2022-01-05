@@ -17,10 +17,11 @@ class FriendsItems: Decodable {
     let count: Int
 }
 
-class User: RealmSwift.Object, Decodable {
+class User: RealmSwift.Object, Codable {
     @objc dynamic var id: Int
     @objc dynamic var first_name: String
     @objc dynamic var last_name: String
+    let photo_100: String?
     @objc dynamic var photo_200_orig: String
 
     override static func primaryKey() -> String? { //Ставим первичный ключ

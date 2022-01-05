@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class NewsFeedHeaderTableViewCell: UITableViewCell {
 
@@ -27,6 +28,18 @@ class NewsFeedHeaderTableViewCell: UITableViewCell {
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(false, animated: animated)
 
+    }
+    
+    func configure(image: String?, name: String?, date: Int64?, text: String?) {
+        if let url = URL(string: image ?? "") {
+        newsResourseAvatarImageView.kf.setImage(with: url)
+        }
+        newsResourseNameLabel.text = name ?? "Имя отсутсвует"
+        newsDataLabel.text = "\(date ?? 0)"
+        if let text = text {
+            newsTextLabel.text = text
+        }
+        
     }
 
     @objc func optionButtonTap(_: UITapGestureRecognizer) {

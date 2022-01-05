@@ -448,18 +448,24 @@
                                 <rect key="frame" x="0.0" y="56" width="414" height="757"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </tableView>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="Oox-bW-zKU">
+                                <rect key="frame" x="188.5" y="502.5" width="37" height="37"/>
+                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="xH8-HY-aRW"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="xH8-HY-aRW" firstAttribute="trailing" secondItem="WdW-gM-B86" secondAttribute="trailing" id="49l-vu-ePK"/>
+                            <constraint firstItem="Oox-bW-zKU" firstAttribute="centerX" secondItem="gsk-2J-zOh" secondAttribute="centerX" id="68a-d2-f2v"/>
                             <constraint firstItem="xH8-HY-aRW" firstAttribute="bottom" secondItem="WdW-gM-B86" secondAttribute="bottom" id="9b4-xo-BQw"/>
                             <constraint firstItem="WdW-gM-B86" firstAttribute="leading" secondItem="xH8-HY-aRW" secondAttribute="leading" id="OvK-Ki-EzN"/>
                             <constraint firstItem="WdW-gM-B86" firstAttribute="top" secondItem="xH8-HY-aRW" secondAttribute="top" id="Zdp-qm-E46"/>
+                            <constraint firstItem="Oox-bW-zKU" firstAttribute="centerY" secondItem="gsk-2J-zOh" secondAttribute="centerY" constant="100" id="cVC-Ge-4wq"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="sKb-ui-Csb"/>
                     <connections>
+                        <outlet property="activityIndicator" destination="Oox-bW-zKU" id="mgJ-eu-ST0"/>
                         <outlet property="newsTableView" destination="WdW-gM-B86" id="VLS-y6-Ttf"/>
                     </connections>
                 </viewController>

@@ -8,6 +8,8 @@
 import UIKit
 import RealmSwift
 import SwiftyJSON
+import CoreData
+import Kingfisher
 
 class NewsController: UIViewController {
 
@@ -23,28 +25,57 @@ class NewsController: UIViewController {
                                    forCellReuseIdentifier: NewsFeedHeaderTableViewCell.reuseIdentifier)
         }
     }
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
-    let newsNoFotoArray:[UIImage] = []
-    let newsOneFotoArray = [UIImage(named: "pok1")]
-    let newsTwoFotoArray = [UIImage(named: "pok1"), UIImage(named: "pok2")]
-    let newsThreeFotoArray = [UIImage(named: "pok1"), UIImage(named: "pok2"), UIImage(named: "pok3")]
-    let newsFourFotoArray = [UIImage(named: "pok1"), UIImage(named: "pok2"), UIImage(named: "pok3"), UIImage(named: "pok4")]
-    let newsFiveFotoArray = [UIImage(named: "pok1"), UIImage(named: "pok2"), UIImage(named: "pok3"), UIImage(named: "pok4"), UIImage(named: "pok5")]
-    let newsSixFotoArray = [UIImage(named: "pok1"), UIImage(named: "pok2"), UIImage(named: "pok3"), UIImage(named: "pok4"), UIImage(named: "pok5"), UIImage(named: "bulbasaur")]
-    
-    var newsHardCodeArray: [[UIImage?]] = []
+    var fetchedResultsController: NSFetchedResultsController<NewsDB>?
+    var newsItemsArray: [Items] = []
+    var newsProfilesArray: [Profiles] = []
+    var newsGroupsArray: [Group] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        newsHardCodeArray.append(newsNoFotoArray)
-        newsHardCodeArray.append(newsOneFotoArray)
-        newsHardCodeArray.append(newsTwoFotoArray)
-        newsHardCodeArray.append(newsThreeFotoArray)
-        newsHardCodeArray.append(newsFourFotoArray)
-        newsHardCodeArray.append(newsFiveFotoArray)
-        newsHardCodeArray.append(newsSixFotoArray)
+//        let fetchedResultsController = DataRepository.shared.getNews(completion: {error in
+//            if error != nil {
+//                debugPrint("NewsFeed: fetchedResultsControllererror: \(error)")
+//            }
+//        })
+//        debugPrint("NewsFeed: fetchedResultsController: \(fetchedResultsController)")
+        
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        activityIndicator.startAnimating()
+        DispatchQueue.global().async { [weak self] in
+            guard let self = self else {return}
+            self.getNews()
+        }
+    }
+    
+    func getNews() {
+        NetworkService.shared.getNewsFeed(completion: { [weak self]
+            data, error in
+            guard let self = self else {return}
+            if error == nil {
+                if let respounse = data?.response {
+                    self.newsItemsArray = respounse.items ?? []
+                    self.newsProfilesArray = respounse.profiles ?? []
+                    debugPrint(self.newsProfilesArray)
+                    self.newsGroupsArray = respounse.groups ?? []
+                    DispatchQueue.main.async {
+                        self.activityIndicator.stopAnimating()
+                        self.newsTableView.reloadData()
+                    }
+                }
+            } else {
+                debugPrint(error)
+            }
+        })
+    }
+    
+    
 
 }
 
@@ -59,11 +90,11 @@ extension NewsController: UITableViewDelegate{
 extension NewsController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return newsHardCodeArray.count
+        return newsItemsArray.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if newsHardCodeArray[section].count > 0 {
+        if let attachmets = newsItemsArray[section].attachments?.filter({$0.type == "photo"}), attachmets.count > 0 {
             return 3
         } else {
             return 2
@@ -72,40 +103,74 @@ extension NewsController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
+        let itemForCell = newsItemsArray[indexPath.section]
+        
         if indexPath.row == 0 {
             let dequeued = tableView.dequeueReusableCell(withIdentifier: NewsFeedHeaderTableViewCell.reuseIdentifier, for: indexPath)
             if let cell = dequeued as? NewsFeedHeaderTableViewCell {
-                cell.newsResourseAvatarImageView.image = UIImage(named: "among")
+                
+                if let sourceId = itemForCell.source_id, sourceId > 0,
+                   let profile = newsProfilesArray.first(where: {$0.id ?? 0 == sourceId}),
+                   let profilePhoto = profile.photo_50,
+                   let firsName = profile.first_name,
+                   let lastName = profile.last_name,
+                   let date = itemForCell.date,
+                   let newsText = itemForCell.text
+                {
+                    let profileName = firsName + " " + lastName
+                    cell.configure(image: profilePhoto, name: profileName, date: date, text: newsText)
+                } else if let sourceId = itemForCell.source_id, sourceId < 0,
+                          let group = newsGroupsArray.first(where: {$0.id == -sourceId}),
+                          let date = itemForCell.date,
+                          let newsText = itemForCell.text
+                {
+                    cell.configure(image: group.photo_100, name: group.name, date: date, text: newsText)
+                }
+                
             }
             return dequeued
         }
         
         if indexPath.row == 1 {
-            let arrayForCell = newsHardCodeArray[indexPath.section]
-            if arrayForCell.count > 0 {
+            var photosUrls: [String] = []
+            if let itemsAtachments = itemForCell.attachments?.filter({$0.type == "photo"}) {
+                for atachment in itemsAtachments {
+                    if let biggestPhoto = atachment.photo?.sizes?.last?.url {
+                        photosUrls.append(biggestPhoto)
+                    }
+                }
+            }
+            
+            if photosUrls.count > 0 {
                 let dequeued = tableView.dequeueReusableCell(withIdentifier: NewsFeedFotosTableViewCell.reuseIdentifier, for: indexPath)
                 if let cell = dequeued as? NewsFeedFotosTableViewCell {
-                    cell.imageArray = arrayForCell
+                    cell.imageArray = photosUrls
                     cell.awakeFromNib()
                 }
                 return dequeued
             } else {
                 let dequeued = tableView.dequeueReusableCell(withIdentifier: NewsFeedFooterTableViewCell.reuseIdentifier, for: indexPath)
-                if let cell = dequeued as? NewsFeedFooterTableViewCell {
-                    cell.likeCountLabel.text = "12"
-                    cell.commentCountLabel.text = "4"
-                    cell.repostCountLabel.text = "1"
-                    cell.viewsCountLabel.text = "23"
+                if let cell = dequeued as? NewsFeedFooterTableViewCell,
+                   let likesCount = itemForCell.likes?.count,
+                   let repostsCount = itemForCell.reposts?.count,
+                   let commentsCount = itemForCell.comments?.count,
+                    let viewCount = itemForCell.views?.count,
+                   let isLiked = itemForCell.likes?.user_likes {
+                    cell.configure(likesCount: likesCount, repostsCount: repostsCount, commentsCount: commentsCount, viewsCount: viewCount, isLiked: isLiked)
+                    cell.awakeFromNib()
                 }
                 return dequeued
             }
         } else {
             let dequeued = tableView.dequeueReusableCell(withIdentifier: NewsFeedFooterTableViewCell.reuseIdentifier, for: indexPath)
-            if let cell = dequeued as? NewsFeedFooterTableViewCell {
-                cell.likeCountLabel.text = "12"
-                cell.commentCountLabel.text = "4"
-                cell.repostCountLabel.text = "1"
-                cell.viewsCountLabel.text = "23"
+            if let cell = dequeued as? NewsFeedFooterTableViewCell,
+               let likesCount = itemForCell.likes?.count,
+               let repostsCount = itemForCell.reposts?.count,
+               let commentsCount = itemForCell.comments?.count,
+                let viewCount = itemForCell.views?.count,
+               let isLiked = itemForCell.likes?.user_likes {
+                cell.configure(likesCount: likesCount, repostsCount: repostsCount, commentsCount: commentsCount, viewsCount: viewCount, isLiked: isLiked)
+                cell.awakeFromNib()
             }
             return dequeued
         }

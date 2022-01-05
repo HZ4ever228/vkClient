@@ -13,6 +13,6 @@ class Session {
     
     private init(){}
     
-    var token = "fedd98cf8cfeee9d5e1243ebbca6d40c4402643d29510d37c87a8b93cb740e09c3e6d1637e2ccdfee117b"
+    var token = "5b2d506815b8d5486b855cb2ff7c2299e8c82e96ecba656c1f97bdf78666d7863efc892bddbdfbe968734"
     var userId = "137882187"
 }

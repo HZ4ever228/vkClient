@@ -11,7 +11,9 @@ import SwiftyJSON
 import RealmSwift
 
 class NetworkService {
-    var friendViewController = FriendsViewController()
+    
+    static let shared = NetworkService()
+    
     //MARK: -saveUsersData
    
     func saveUsersData (_ users: [User]) {
@@ -109,4 +111,52 @@ class NetworkService {
         }
         dataTask.resume()
     }
+    
+    //MARK: - GetNewsFeed -
+
+    func getNewsFeed(completion: @escaping (NewsMainResponse?, Error?) -> ()) {
+
+        let token = Session.instance.token
+        guard let url = URL(string: "https://api.vk.com/method/newsfeed.get?filter=post&v=5.131&access_token=\(token)") else { return }
+        let request = URLRequest(url: url)
+
+        let dataTask = URLSession.shared.dataTask(with: request) { data, response, error in
+            if let newsFeedData = data {
+                do {
+                    let newsFeedRespounse = try JSONDecoder().decode(NewsMainResponse.self, from: newsFeedData)
+                    completion(newsFeedRespounse, nil)
+                } catch let err {
+                    completion(nil, err)
+                }
+            }
+        }
+        dataTask.resume()
+    }
+
+//func setdTestRequest() {
+//
+//    let token = Session.instance.token
+//    guard let url = URL(string: "https://api.vk.com/method/newsfeed.get?filter=post&v=5.131&access_token=\(token)") else { return }
+//    let request = URLRequest(url: url)
+//
+//    let dataTask = URLSession.shared.dataTask(with: request) { data, response, error in
+////            print(response)
+//        if let data = data {
+//            do {
+//
+////                    формат хмл
+//                let json = try JSONSerialization.jsonObject(with: data)
+//                print("json: \(json)")
+//            } catch {
+//                print("error: \(error)")
+//            }
+//        }
+//
+//    }
+//
+//    dataTask.resume()
+//
+//}
 }
+
+
