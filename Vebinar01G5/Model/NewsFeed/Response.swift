@@ -39,19 +39,13 @@ struct NewsFeedResponse : Codable {
 struct Items : Codable {
     let source_id : Int64?
     let date : Int64?
-    let can_doubt_category : Bool?
-    let can_set_category : Bool?
     let post_type : String?
     let text : String?
-    let marked_as_ads : Int?
     let attachments : [Attachments]?
     let comments : Comments?
     let likes : Likes?
     let reposts : Reposts?
     let views : Views?
-    let is_favorite : Bool?
-    let donut : Donut?
-    let short_text_rate : Double?
     let post_id : Int64?
     let type : String?
 
@@ -59,19 +53,13 @@ struct Items : Codable {
 
         case source_id = "source_id"
         case date = "date"
-        case can_doubt_category = "can_doubt_category"
-        case can_set_category = "can_set_category"
         case post_type = "post_type"
         case text = "text"
-        case marked_as_ads = "marked_as_ads"
         case attachments = "attachments"
         case comments = "comments"
         case likes = "likes"
         case reposts = "reposts"
         case views = "views"
-        case is_favorite = "is_favorite"
-        case donut = "donut"
-        case short_text_rate = "short_text_rate"
         case post_id = "post_id"
         case type = "type"
     }
@@ -80,19 +68,13 @@ struct Items : Codable {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         source_id = try values.decodeIfPresent(Int64.self, forKey: .source_id)
         date = try values.decodeIfPresent(Int64.self, forKey: .date)
-        can_doubt_category = try values.decodeIfPresent(Bool.self, forKey: .can_doubt_category)
-        can_set_category = try values.decodeIfPresent(Bool.self, forKey: .can_set_category)
         post_type = try values.decodeIfPresent(String.self, forKey: .post_type)
         text = try values.decodeIfPresent(String.self, forKey: .text)
-        marked_as_ads = try values.decodeIfPresent(Int.self, forKey: .marked_as_ads)
         attachments = try values.decodeIfPresent([Attachments].self, forKey: .attachments)
         comments = try values.decodeIfPresent(Comments.self, forKey: .comments)
         likes = try values.decodeIfPresent(Likes.self, forKey: .likes)
         reposts = try values.decodeIfPresent(Reposts.self, forKey: .reposts)
         views = try values.decodeIfPresent(Views.self, forKey: .views)
-        is_favorite = try values.decodeIfPresent(Bool.self, forKey: .is_favorite)
-        donut = try values.decodeIfPresent(Donut.self, forKey: .donut)
-        short_text_rate = try values.decodeIfPresent(Double.self, forKey: .short_text_rate)
         post_id = try values.decodeIfPresent(Int64.self, forKey: .post_id)
         type = try values.decodeIfPresent(String.self, forKey: .type)
     }

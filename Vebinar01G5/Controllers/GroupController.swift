@@ -11,31 +11,45 @@ import RealmSwift
 class GroupController: UITableViewController, UISearchBarDelegate {
 
     @IBOutlet weak var searchBar: UISearchBar!
-    var allGroups = [Group]()
-    var searchAllGroups = [Group]()
-    var searchFlag = false
+    
+    private let reuseIdentifierUniversalTableCell =  "reuseIdentifierUniversalTableCell"
+    
+    private var allGroups = [Group]()
+    private var searchAllGroups = [Group]()
+    private var searchFlag = false
+    private var realm = try! Realm()
+    private var databaseNotificationToken: NotificationToken?
+    private var resultNotificationToken: NotificationToken?
 
-    lazy var realm = try! Realm()
-    var databaseNotificationToken: NotificationToken?
-    var resultNotificationToken: NotificationToken?
+    //MARK: - LifeCicle
 
-    let reuseIdentifierUniversalTableCell =  "reuseIdentifierUniversalTableCell"
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.tableView.register(UINib(nibName: "UniversalTableCell", bundle: nil), forCellReuseIdentifier: reuseIdentifierUniversalTableCell)
+        searchBar.delegate = self
+        setupGroup()
+    }
 
-
-    //MARK:- setupGroup
+    //MARK: - actions
 
     func setupGroup(){
-        let network = NetworkService()
-        network.groupsRequest { _ in}
-
+        DataRepository.shared.getGroups(completion: { error, groups in
+            if error == nil, let groupsArray = groups {
+                self.allGroups = groupsArray
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            }
+        })
+    }
+    
+    func notificationsObserve(groups: Results<Group>) {
+        
         databaseNotificationToken = realm.observe { notification, realm in
             print(notification.rawValue)
             print(realm.objects(Group.self))
         }
-
-        let groups = realm.objects(Group.self)
-        self.allGroups = Array(groups)
-
+        
         resultNotificationToken = groups.observe { change in
             switch change{
             case .initial:
@@ -48,17 +62,6 @@ class GroupController: UITableViewController, UISearchBarDelegate {
                 print(error)
             }
         }
-
-    }
-
-
-    //MARK:- viewDidLoad
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        self.tableView.register(UINib(nibName: "UniversalTableCell", bundle: nil), forCellReuseIdentifier: reuseIdentifierUniversalTableCell)
-        searchBar.delegate = self
-        setupGroup()
     }
 
     // MARK: - Table view data source
