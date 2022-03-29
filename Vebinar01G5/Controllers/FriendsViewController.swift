@@ -7,19 +7,21 @@
 
 import UIKit
 import RealmSwift
+import SwiftUI
 
 class FriendsViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
-
-    lazy var realm = try! Realm()
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    
+    private let segueToPhotoController = "fromFriendsToPhoto"
+    
+    private var realm = try! Realm()
 
     let reuseIdentifierUniversalTableCell =  "reuseIdentifierUniversalTableCell"
-    let segueToPhotoController = "fromFriendsToPhoto"
     
     var friendsArray = [User]()
-    var photoArray = [UserPhoto]()
 
     var searchFriendsArray = [User]()
     var searchFlag = false
@@ -27,12 +29,8 @@ class FriendsViewController: UIViewController {
     var databaseNotificationToken: NotificationToken?
     var resultNotificationToken: NotificationToken?
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        tableView.reloadData()
-    }
 
-    //MARK:- viewDidLoad
+    //MARK: - Life Cicle
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,26 +40,31 @@ class FriendsViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         searchBar.delegate = self
-
         setupUser()
-        print(realm.configuration.fileURL ?? "")
-
-        self.tableView.reloadData()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        notificationsObserve(users: realm.objects(User.self))
+        
     }
 
-
-    //MARK:- setupUser
+    //MARK: - Actions
     
     func setupUser(){
-        let network = NetworkService()
-        network.friendsRequst { _ in}
-        databaseNotificationToken = realm.observe { notification, realm in
-            print(notification.rawValue)
-            print(realm.objects(User.self))
-        }
-        let users = realm.objects(User.self)
-        self.friendsArray = Array(users)
-
+        self.activityIndicator.startAnimating()
+        DataRepository.shared.getFriends(completion: { error, users in
+            if error == nil, let userArray = users {
+                self.friendsArray = userArray
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                    self.activityIndicator.stopAnimating()
+                }
+            }
+        })
+    }
+    
+    func notificationsObserve(users: Results<User>) {
         resultNotificationToken = users.observe { change in
             switch change{
             case .initial:
@@ -73,6 +76,11 @@ class FriendsViewController: UIViewController {
             case .error(let error):
                 print(error)
             }
+        }
+        
+        databaseNotificationToken = realm.observe { notification, realm in
+            print(notification.rawValue)
+            print(realm.objects(User.self))
         }
     }
 
@@ -139,7 +147,7 @@ extension FriendsViewController: UISearchBarDelegate {
     }
 }
 
-//MARK:- extension FriendsViewController
+//MARK: - Extension UITableView -
 
 extension FriendsViewController: UITableViewDelegate, UITableViewDataSource {
     
@@ -162,43 +170,15 @@ extension FriendsViewController: UITableViewDelegate, UITableViewDataSource {
         return 60
     }
 
-    //MARK:- prepare cell in photoController
+    //MARK: - prepare cell in UsersPhotoViewController
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == segueToPhotoController,
-           let dst = segue.destination as? PhotoController,
+           let dst = segue.destination as? UsersPhotoViewController,
            let user = sender as? User {
             animatedChoose()
-
-            // func getUserPhotos(){
-            let network = NetworkService()
-            let userID = user.id
-            network.friendsPhotoRequst(userID: userID) { _ in}
-
-            databaseNotificationToken = realm.observe { notification, realm in
-                print(notification.rawValue)
-                print(realm.objects(UserPhoto.self))
-            }
-
-            let userPhoto = realm.objects(UserPhoto.self)
-            dst.photoArray = Array(userPhoto.filter { $0.owner_id == userID})
-
-            resultNotificationToken = userPhoto.observe { change in
-                switch change{
-                case .initial:
-                    print("init")
-                case .update(_, let deletions, let insertions, let modifications):
-                    print(deletions)
-                    print(insertions)
-                    print(modifications)
-                case .error(let error):
-                    print(error)
-                }
-            }
-
+            dst.userID = user.id
         }
-
-
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath){

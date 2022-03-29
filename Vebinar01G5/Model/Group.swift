@@ -18,7 +18,7 @@ class GroupsItems: Decodable {
     let count: Int?
 }
 
-class Group: RealmSwift.Object, Decodable {
+class Group: RealmSwift.Object, Codable {
     @objc dynamic var id: Int
     @objc dynamic var name: String
     @objc dynamic var screen_name: String

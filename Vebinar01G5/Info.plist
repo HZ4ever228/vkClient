@@ -55,6 +55,13 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>UIAppFonts</key>
+	<array>
+		<string>VK Sans Display.otf</string>
+		<string>VK Sans Display Demibold.otf</string>
+		<string>VK Sans Display Medium.otf</string>
+		<string>VK Sans Text.otf</string>
+	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

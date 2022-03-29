@@ -7,22 +7,13 @@
 
 import UIKit
 import WebKit
+import CoreData
 
 //MARK:- TableViewController
 class TableViewController: UIViewController {
 
-
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        //view.backgroundColor = .green
-        
-        //friendsRequst()
-        //friendPhotoRequest(searchText:22090669)
-        //groupsRequest()
-        //groupsSearch(searchText: 41139501)
-        newsRequest()
-
     }
 
 }
@@ -30,8 +21,6 @@ class TableViewController: UIViewController {
 //MARK:- VKLoginController
 class VKLoginController: UIViewController {
 
-   // let segueToTapBarController = "segueToTapBarController"
-   // performSegue(withIdentifier: segueToTapBarController, sender: nil)
     @IBOutlet var webView: WKWebView! {
         didSet {
             webView.navigationDelegate = self
@@ -47,7 +36,7 @@ class VKLoginController: UIViewController {
         components.path = "/authorize"
         components.queryItems = [
             URLQueryItem(name: "client_id", value: "7922523"), // индивидуальные айди приложения
-            URLQueryItem(name: "scope", value: "262150"), // Доступы друзья фото и тд
+            URLQueryItem(name: "scope", value: "270342"), // Доступы друзья фото и тд
             URLQueryItem(name: "display", value: "mobile"), // Стиль отображения
             URLQueryItem(name: "redirect_uri", value: "https://oauth.vk.com/blank.html"), //
             URLQueryItem(name: "response_type", value: "token"),
@@ -57,6 +46,10 @@ class VKLoginController: UIViewController {
         let request = URLRequest(url: components.url!)
 
         webView.load(request)
+        
+        let application =  UIApplication.shared.delegate as! AppDelegate
+                let context = application.persistentContainer.viewContext
+
 
     }
 
@@ -97,68 +90,3 @@ extension VKLoginController: WKNavigationDelegate {
     
 }
 
-//MARK:- friendPhotoRequest
-func friendPhotoRequest(searchText: Int) {
-
-    guard let url = URL(string: "https://api.vk.com/method/photos.get?owner_id=\(searchText)&album_id=profile&v=5.52&access_token=\(Session.instance.token)") else { return }
-
-    let request = URLRequest(url: url)
-
-    let dataTask = URLSession.shared.dataTask(with: request) { data, response, error in
-
-        if let data = data {
-            do {
-                let json = try JSONSerialization.jsonObject(with: data)
-                print("fotorequest228 \(json)")
-            } catch {
-                print(error)
-            }
-        }
-    }
-    dataTask.resume()
-
-}
-
-
-//MARK:- groupsSearch
-func groupsSearch(searchText: Int) {
-
-    guard let url = URL(string: "https://api.vk.com/method/groups.search?q=\(searchText)&v=5.52&access_token=\(Session.instance.token)") else { return }
-
-    let request = URLRequest(url: url)
-
-    let dataTask = URLSession.shared.dataTask(with: request) { data, response, error in
-
-        if let data = data {
-            do {
-                let json = try JSONSerialization.jsonObject(with: data)
-                print(json)
-            } catch {
-                print(error)
-            }
-        }
-    }
-    dataTask.resume()
-
-}
-
-func newsRequest() {
-
-    guard let url = URL(string: "https://api.vk.com/method/newsfeed.getLists?extended=1&v=5.52&access_token=\(Session.instance.token)") else { return }
-
-    let request = URLRequest(url: url)
-
-    let dataTask = URLSession.shared.dataTask(with: request) { data, response, error in
-
-        if let data = data {
-            do {
-                let json = try JSONSerialization.jsonObject(with: data)
-                print("newsRequst \(json)")
-            } catch {
-                print(error)
-            }
-        }
-    }
-    dataTask.resume()
-
-}

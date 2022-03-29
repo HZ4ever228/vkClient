@@ -8,26 +8,59 @@
 import UIKit
 import RealmSwift
 import SwiftyJSON
+import Kingfisher
 
 class NewsController: UIViewController {
-
-    let reuseIdentifierUniversalTableCell =  "reuseIdentifierUniversalTableCell"
 
     @IBOutlet weak var newsTableView: UITableView! {
         didSet {
             newsTableView.dataSource = self
             newsTableView.delegate = self
+            newsTableView.register(UINib(nibName: "NewsFeedFooterTableViewCell", bundle: nil),
+                                   forCellReuseIdentifier: NewsFeedFooterTableViewCell.reuseIdentifier)
+            newsTableView.register(UINib(nibName: "NewsFeedFotosTableViewCell", bundle: nil),
+                                   forCellReuseIdentifier: NewsFeedFotosTableViewCell.reuseIdentifier)
+            newsTableView.register(UINib(nibName: "NewsFeedHeaderTableViewCell", bundle: nil),
+                                   forCellReuseIdentifier: NewsFeedHeaderTableViewCell.reuseIdentifier)
         }
     }
-
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    
+    var newsItemsArray: [NewsDB] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.newsTableView.register(UINib(nibName: "UniversalTableCell", bundle: nil),
-                                    forCellReuseIdentifier: reuseIdentifierUniversalTableCell)
-       // newsRequest()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        activityIndicator.startAnimating()
+        DispatchQueue.global().async {
+            self.getNews()
+        }
+    }
+    
+    func getNews() {
+        DataRepository.shared.getNews() {
+            error, newsDB in
+            if error == nil, let newsDB = newsDB {
+                self.newsItemsArray = newsDB
+                DispatchQueue.main.async {
+                    self.newsTableView.reloadData()
+                    self.activityIndicator.stopAnimating()
+                }
+            } else {
+                debugPrint(error)
+            }
+        }
+    }
+    
+    
 
 }
+
+    // MARK: - UITableViewDelegate, UITableViewDataSource  -
 
 extension NewsController: UITableViewDelegate{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -36,16 +69,60 @@ extension NewsController: UITableViewDelegate{
 }
 
 extension NewsController: UITableViewDataSource {
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return newsItemsArray.count
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        if newsItemsArray[section].newsPhotos.count > 0 {
+            return 3
+        } else {
+            return 2
+        }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifierUniversalTableCell,
-                                                           for: indexPath) as? UniversalTableCell else { return UITableViewCell() }
-        cell.avatarImageView.image = UIImage(named: "bulbasaur")
-        cell.titleLabel.text = "новость"
-        return cell
+        
+        let itemForCell = newsItemsArray[indexPath.section]
+        
+        if indexPath.row == 0 {
+            let dequeued = tableView.dequeueReusableCell(withIdentifier: NewsFeedHeaderTableViewCell.reuseIdentifier, for: indexPath)
+            if let cell = dequeued as? NewsFeedHeaderTableViewCell {
+                    cell.configure(image: itemForCell.authorImage, name: itemForCell.author, date: itemForCell.date, text: itemForCell.text)
+            }
+            return dequeued
+        }
+        
+        if indexPath.row == 1 {
+            
+            if itemForCell.newsPhotos.count > 0 {
+                let dequeued = tableView.dequeueReusableCell(withIdentifier: NewsFeedFotosTableViewCell.reuseIdentifier, for: indexPath)
+                if let cell = dequeued as? NewsFeedFotosTableViewCell {
+                    var photoArray: [String] = []
+                    for photo in itemForCell.newsPhotos {
+                        photoArray.append(photo)
+                    }
+//                    cell.complitionSucces = {DispatchQueue.main.async {
+//                        self.newsTableView.reloadData()
+//                    }}
+                    cell.configure(imageArray: photoArray)
+                }
+                return dequeued
+            } else {
+                let dequeued = tableView.dequeueReusableCell(withIdentifier: NewsFeedFooterTableViewCell.reuseIdentifier, for: indexPath)
+                if let cell = dequeued as? NewsFeedFooterTableViewCell {
+                    cell.configure(likesCount: itemForCell.likesCount, repostsCount: itemForCell.repostsCount, commentsCount: itemForCell.repostsCount, viewsCount: itemForCell.viewsCount, isLiked: itemForCell.isLiked)
+                }
+                return dequeued
+            }
+        } else {
+            let dequeued = tableView.dequeueReusableCell(withIdentifier: NewsFeedFooterTableViewCell.reuseIdentifier, for: indexPath)
+            if let cell = dequeued as? NewsFeedFooterTableViewCell {
+                cell.configure(likesCount: itemForCell.likesCount, repostsCount: itemForCell.repostsCount, commentsCount: itemForCell.repostsCount, viewsCount: itemForCell.viewsCount, isLiked: itemForCell.isLiked)
+            }
+            return dequeued
+        }
     }
 
 
