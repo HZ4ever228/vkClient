@@ -30,16 +30,11 @@ class NewsFeedHeaderTableViewCell: UITableViewCell {
 
     }
     
-    func configure(image: String?, name: String?, date: Int64?, text: String?) {
-        if let url = URL(string: image ?? "") {
-        newsResourseAvatarImageView.kf.setImage(with: url)
-        }
-        newsResourseNameLabel.text = name ?? "Имя отсутсвует"
-        newsDataLabel.text = "\(date ?? 0)"
-        if let text = text {
-            newsTextLabel.text = text
-        }
-        
+    func configure(_ viewModel: NewsViewModel) {
+        newsResourseAvatarImageView.kf.setImage(with: viewModel.avatar)
+        newsResourseNameLabel.text = viewModel.name
+        newsDataLabel.text = viewModel.date
+        newsTextLabel.text = viewModel.text
     }
 
     @objc func optionButtonTap(_: UITapGestureRecognizer) {

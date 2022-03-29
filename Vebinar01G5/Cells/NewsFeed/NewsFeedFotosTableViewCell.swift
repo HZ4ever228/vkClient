@@ -71,7 +71,8 @@ class NewsFeedFotosTableViewCell: UITableViewCell {
         
     }
     
-    func configure(imageArray: [String]) {
+    func configure(_ viewModel: NewsViewModel) {
+        let imageArray = viewModel.imageArray
         switch imageArray.count {
         case 0:
             debugPrint("image array is empty")
