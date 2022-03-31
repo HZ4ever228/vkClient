@@ -39,11 +39,11 @@ class NewsFeedFooterTableViewCell: UITableViewCell {
         super.awakeFromNib()
     }
     
-    func configure(likesCount: Int32?, repostsCount: Int32?, commentsCount: Int32?, viewsCount: Int32?, isLiked: Bool?) {
-        likeCountLabel.text = "\(likesCount ?? 0)"
-        repostCountLabel.text = "\(repostsCount ?? 0)"
-        commentCountLabel.text = "\(commentsCount ?? 0)"
-        viewsCountLabel.text = "\(viewsCount ?? 0)"
+    func configure(_ viewModel: NewsViewModel) {
+        likeCountLabel.text = "\(viewModel.likeCount)"
+        repostCountLabel.text = "\(viewModel.repostCount)"
+        commentCountLabel.text = "\(viewModel.comentCount)"
+        viewsCountLabel.text = "\(viewModel.viewsCount)"
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

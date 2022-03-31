@@ -181,7 +181,7 @@ class LoginViewController: UIViewController {
 //            wrongPassOrLoginAnimateButoon()
 //
 //            showAllert(message: "Error login or password") { _ in
-//                //self.backView.backgroundColor = UIColor.gray
+ //               self.backView.backgroundColor = UIColor.backgroundDarkColor
 //                return
 //            }
 //        }

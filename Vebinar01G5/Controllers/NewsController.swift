@@ -26,7 +26,8 @@ class NewsController: UIViewController {
     }
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
-    var newsItemsArray: [NewsDB] = []
+    private let viewModelFactory = NewsViewModelFactory()
+    var newsItemsArray: [NewsViewModel] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,7 +46,7 @@ class NewsController: UIViewController {
         DataRepository.shared.getNews() {
             error, newsDB in
             if error == nil, let newsDB = newsDB {
-                self.newsItemsArray = newsDB
+                self.newsItemsArray = self.viewModelFactory.constructViewModels(from: newsDB)
                 DispatchQueue.main.async {
                     self.newsTableView.reloadData()
                     self.activityIndicator.stopAnimating()
@@ -75,7 +76,7 @@ extension NewsController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if newsItemsArray[section].newsPhotos.count > 0 {
+        if newsItemsArray[section].imageArray.count > 0 {
             return 3
         } else {
             return 2
@@ -89,37 +90,30 @@ extension NewsController: UITableViewDataSource {
         if indexPath.row == 0 {
             let dequeued = tableView.dequeueReusableCell(withIdentifier: NewsFeedHeaderTableViewCell.reuseIdentifier, for: indexPath)
             if let cell = dequeued as? NewsFeedHeaderTableViewCell {
-                    cell.configure(image: itemForCell.authorImage, name: itemForCell.author, date: itemForCell.date, text: itemForCell.text)
+                    cell.configure(itemForCell)
             }
             return dequeued
         }
         
         if indexPath.row == 1 {
             
-            if itemForCell.newsPhotos.count > 0 {
+            if itemForCell.imageArray.count > 0 {
                 let dequeued = tableView.dequeueReusableCell(withIdentifier: NewsFeedFotosTableViewCell.reuseIdentifier, for: indexPath)
                 if let cell = dequeued as? NewsFeedFotosTableViewCell {
-                    var photoArray: [String] = []
-                    for photo in itemForCell.newsPhotos {
-                        photoArray.append(photo)
-                    }
-//                    cell.complitionSucces = {DispatchQueue.main.async {
-//                        self.newsTableView.reloadData()
-//                    }}
-                    cell.configure(imageArray: photoArray)
+                    cell.configure(itemForCell)
                 }
                 return dequeued
             } else {
                 let dequeued = tableView.dequeueReusableCell(withIdentifier: NewsFeedFooterTableViewCell.reuseIdentifier, for: indexPath)
                 if let cell = dequeued as? NewsFeedFooterTableViewCell {
-                    cell.configure(likesCount: itemForCell.likesCount, repostsCount: itemForCell.repostsCount, commentsCount: itemForCell.repostsCount, viewsCount: itemForCell.viewsCount, isLiked: itemForCell.isLiked)
+                    cell.configure(itemForCell)
                 }
                 return dequeued
             }
         } else {
             let dequeued = tableView.dequeueReusableCell(withIdentifier: NewsFeedFooterTableViewCell.reuseIdentifier, for: indexPath)
             if let cell = dequeued as? NewsFeedFooterTableViewCell {
-                cell.configure(likesCount: itemForCell.likesCount, repostsCount: itemForCell.repostsCount, commentsCount: itemForCell.repostsCount, viewsCount: itemForCell.viewsCount, isLiked: itemForCell.isLiked)
+                cell.configure(itemForCell)
             }
             return dequeued
         }
