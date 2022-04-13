@@ -15,9 +15,10 @@ class DataRepository {
     public static let shared = DataRepository()
     
     private let realm = try! Realm()
+    private let networkLog = NetworkLog(networkService: NetworkService())
     
     func getFriends(completion: @escaping (Error?, [User]?) -> (Void)) {
-        NetworkService.shared.getFriends(completion: { friendsData, error in
+        networkLog.getFriends(completion: { friendsData, error in
             if error == nil, let items = friendsData?.response.items {
                 DispatchQueue.main.async {
                     do {
@@ -35,7 +36,7 @@ class DataRepository {
     }
     
     func getFriendsPhotos(userID: Int, completion: @escaping (Error?, UserPhotoDB?) -> (Void)) {
-        NetworkService.shared.getFriendsPhotos(userID: userID, completion: { friendPhotoData, error in
+        networkLog.getFriendsPhotos(userID: userID, completion: { friendPhotoData, error in
             if error == nil, let items = friendPhotoData?.response.items {
                 DispatchQueue.main.async {
                     do {
@@ -52,7 +53,7 @@ class DataRepository {
     }
     
     func getGroups(completion: @escaping (Error?, [Group]?) -> (Void)) {
-        NetworkService.shared.getGroups(completion: { groupsData, error in
+        networkLog.getGroups(completion: { groupsData, error in
             if error == nil, let items = groupsData?.response.items {
                 DispatchQueue.main.async {
                     do {
@@ -70,7 +71,7 @@ class DataRepository {
     }
     
     func getNews(completion: @escaping (Error?, [NewsDB]?) -> (Void)) {
-        NetworkService.shared.getNewsFeed() { newsData, error in
+        networkLog.getNewsFeed() { newsData, error in
             if error == nil, let response = newsData?.response {
                 DispatchQueue.main.async {
                     do {
