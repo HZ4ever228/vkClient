@@ -11,9 +11,8 @@ import SwiftyJSON
 import RealmSwift
 import WebKit
 
-class NetworkService {
+class NetworkService: NetworkServicesInterface {
     
-    static let shared = NetworkService()
     private let token = Session.instance.token
     
     func getFriends(completion: @escaping (FriendsResponse?, Error?) -> ()) {
